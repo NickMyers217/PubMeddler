@@ -1,0 +1,64 @@
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<div class="well colorShadow">
+			<%= form_for @query, :html => { :class => "form-horizontal query" } do |f| %>
+
+			<% if @query.errors.any? %>
+			<div id="error_expl" class="panel panel-danger">
+				<div class="panel-heading">
+					<h3 class="panel-title"><%= pluralize(@query.errors.count, "error") %> prohibited this query from being saved:</h3>
+				</div>
+				<div class="panel-body">
+					<ul>
+						<% @query.errors.full_messages.each do |msg| %>
+						<li><%= msg %></li>
+						<% end %>
+					</ul>
+				</div>
+			</div>
+			<% end %>
+
+			<div class="control-group">
+				<%= f.label :journal, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :journal, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:journal]) %>
+			</div>
+			<div class="control-group">
+				<%= f.label :term, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :term, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:term]) %>
+			</div>
+			<div class="control-group">
+				<%= f.label :retmax, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :retmax, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:retmax]) %>
+			</div>
+			<div class="control-group">
+				<%= f.label :mindate, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :mindate, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:mindate]) %>
+			</div>
+			<div class="control-group">
+				<%= f.label :maxdate, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :maxdate, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:maxdate]) %>
+			</div>
+
+
+			<%= f.submit nil, :class => 'btn btn-primary' %>
+			<%= link_to 'Cancel', queries_path, :class => 'btn btn-default', :role => "button" %>
+
+			<% end %>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  journal: MyString
+  term: MyString
+  retmax: 1
+  mindate: MyString
+  maxdate: MyString
+
+two:
+  journal: MyString
+  term: MyString
+  retmax: 1
+  mindate: MyString
+  maxdate: MyString
