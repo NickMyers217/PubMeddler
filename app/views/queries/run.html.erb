@@ -1,39 +1,43 @@
-<% @summaries["pubmedarticle"].each do |article| %>
+<% if @summaries %>
+	<% @summaries["pubmedarticle"].each do |article| %>
 
-<div class="row well colorShadow">
-	<div class="row">
-		<div class="col-sm-10">
-			<h3><a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
-				<%= article["medlinecitation"]["article"]["articletitle"] %>
-			</a></h3>
+	<div class="row well colorShadow">
+		<div class="row">
+			<div class="col-sm-10">
+				<h3><a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
+					<%= article["medlinecitation"]["article"]["articletitle"] %>
+				</a></h3>
+			</div>
+			<div class="col-sm-2">
+				<h3 class="text text-success">
+					<% date = article["medlinecitation"]["datecreated"] %>
+					<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
+				</h3>
+			</div>
 		</div>
-		<div class="col-sm-2">
-			<h3 class="text text-success">
-				<% date = article["medlinecitation"]["datecreated"] %>
-				<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
-			</h3>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-12">
-			<% abstract = article["medlinecitation"]["article"]["abstract"] %>
+		<div class="row">
+			<div class="col-sm-12">
+				<% abstract = article["medlinecitation"]["article"]["abstract"] %>
 
-			
-			<% if abstract %>
-				<% if abstract["abstracttext"].class == String %>
-					<p><%= abstract["abstracttext"].html_safe %></p>
-				<% end %>
-
-				<% if abstract["abstracttext"].class == Array %>
-					<% abstract["abstracttext"].each do |a| %>
-						<p><%= a.html_safe %></p>
+				
+				<% if abstract %>
+					<% if abstract["abstracttext"].class == String %>
+						<p><%= abstract["abstracttext"].html_safe %></p>
 					<% end %>
+
+					<% if abstract["abstracttext"].class == Array %>
+						<% abstract["abstracttext"].each do |a| %>
+							<p><%= a.html_safe %></p>
+						<% end %>
+					<% end %>
+				<% else %>
+					<h5 class="text text-warning">No Abstract</h5>
 				<% end %>
-			<% else %>
-				<h5 class="text text-warning">No Abstract</h5>
-			<% end %>
+			</div>
 		</div>
 	</div>
-</div>
 
+	<% end %>
+<% else %>
+	<center><h3 class="text text-warning">No results.</h3></center>
 <% end %>
