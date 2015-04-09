@@ -11,15 +11,14 @@
 		<%= render 'layouts/header.html.erb' %>
 	</header>
 
-	<div class="container">
+	<% if params[:controller] == 'landing' and params[:action] == 'index' %>
 		<p class="notice"><%= notice %></p>
 		<p class="alert"><%= alert %></p>
-	</div>
-
-	<% if params[:controller] == 'landing' and params[:action] == 'index' %>
 		<%= yield %>
 	<% else %>
 		<div class="container">
+			<p class="notice"><%= notice %></p>
+			<p class="alert"><%= alert %></p>
 			<%= yield %>
 		</div>
 	<% end %>
