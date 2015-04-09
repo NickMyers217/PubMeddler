@@ -18,6 +18,10 @@
 	border-radius: 0px;
 }
 
+.pageBar {
+	text-align: center;
+}
+
 .colorShadow {
 	-moz-box-shadow:    0 0 20px #0000aa;
 	-webkit-box-shadow: 0 0 20px #0000aa;
@@ -28,4 +32,18 @@
 	-webkit-box-shadow: inset 0px 0px 13px 0px rgba(50, 50, 50, 0.75);
 	-moz-box-shadow:    inset 0px 0px 13px 0px rgba(50, 50, 50, 0.75);
 	box-shadow:         inset 0px 0px 13px 0px rgba(50, 50, 50, 0.75);
+}
+
+a#backToTop {
+    width: 50px;
+    height: 50px;
+    opacity: 0.5;
+    position: fixed;
+    bottom: 20px;
+    left: 85%;
+    display: none;
+    text-indent: -10000px;
+    outline: none!important;
+    background-image: url('http://www.web411solutions.com/images/top-button.png');
+    background-repeat: no-repeat;
 }

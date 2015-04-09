@@ -1,43 +1,82 @@
 <% if @summaries %>
-	<% @summaries["pubmedarticle"].each do |article| %>
+<!--<center><h3 class="text text-success"><%# "Page #{@page} - #{@retstart + 1} - #{@retstart + @query.retmax} out of #{@count} results." %></h3></center>-->
 
-	<div class="row well colorShadow">
-		<div class="row">
-			<div class="col-sm-10">
-				<h3><a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
-					<%= article["medlinecitation"]["article"]["articletitle"] %>
-				</a></h3>
-			</div>
-			<div class="col-sm-2">
-				<h3 class="text text-success">
-					<% date = article["medlinecitation"]["datecreated"] %>
-					<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
-				</h3>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12">
-				<% abstract = article["medlinecitation"]["article"]["abstract"] %>
+<div class="pageBar">
+	<ul class="pagination">
+		<%# place left page arrow %>
+		<% if @page > 1 %>
+		<li><%= link_to "««", :action => "run", :id => @query.id, :params => { :page => 1 } %></li>
+		<li><%= link_to "«", :action => "run", :id => @query.id, :params => { :page => (@page - 1) } %></li>
+		<% else %>
+		<li class="disabled"><a href="">««</a></li>
+		<li class="disabled"><a href="">«</a></li>
+		<% end %>
 
-				
-				<% if abstract %>
-					<% if abstract["abstracttext"].class == String %>
-						<p><%= abstract["abstracttext"].html_safe %></p>
-					<% end %>
-
-					<% if abstract["abstracttext"].class == Array %>
-						<% abstract["abstracttext"].each do |a| %>
-							<p><%= a.html_safe %></p>
-						<% end %>
-					<% end %>
+		<%# list out eleven pages, active page in the very middle %>
+		<% ((@page - 5)..(@page + 5)).each do |i| %>
+			<%if i > 0 and i * @query.retmax - 30 <= @count %>
+				<% if i == @page %>
+				<li class="active"><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
 				<% else %>
-					<h5 class="text text-warning">No Abstract</h5>
+				<li><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
 				<% end %>
-			</div>
+			<% end %>
+		<% end %>
+
+		<%# place right page arrow %>
+		<% if @retstart + @query.retmax <= @count %>
+		<li><%= link_to "»", :action => "run", :id => @query.id, :params => { :page => (@page + 1) } %></li>
+			<% if @count % @query.retmax == 0 %>
+				<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => (@count / @query.retmax).to_i } %></li>
+			<% else %>
+				<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => ((@count / @query.retmax).to_i + 1) } %></li>
+			<% end %>
+		<% else %>
+		<li class="disabled"><a href="">»</a></li>
+		<li class="disabled"><a href="">»»</a></li>
+		<% end %>
+	</ul>
+</div>
+
+
+
+<% @summaries["pubmedarticle"].each do |article| %>
+
+<div class="row well colorShadow">
+	<div class="row">
+		<div class="col-sm-10">
+			<h3><a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
+				<%= article["medlinecitation"]["article"]["articletitle"] %>
+			</a></h3>
+		</div>
+		<div class="col-sm-2">
+			<h3 class="text text-success">
+				<% date = article["medlinecitation"]["datecreated"] %>
+				<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
+			</h3>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<% abstract = article["medlinecitation"]["article"]["abstract"] %>
+			<% if abstract %>
+			<% if abstract["abstracttext"].class == String %>
+			<p><%= abstract["abstracttext"].html_safe %></p>
+			<% end %>
 
-	<% end %>
+			<% if abstract["abstracttext"].class == Array %>
+			<% abstract["abstracttext"].each do |a| %>
+			<p><%= a.html_safe %></p>
+			<% end %>
+			<% end %>
+			<% else %>
+			<h5 class="text text-warning">No Abstract</h5>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<% end %>
 <% else %>
-	<center><h3 class="text text-warning">No results.</h3></center>
+<center><h3 class="text text-warning">No results.</h3></center>
 <% end %>

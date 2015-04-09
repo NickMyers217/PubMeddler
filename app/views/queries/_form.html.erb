@@ -19,50 +19,51 @@
 			<% end %>
 
 			<div class="control-group">
-				<%= f.label :title, :class => 'control-label' %>
+				<%= f.label "#{:title} *", :class => 'control-label' %>
 				<div class="controls">
 					<%= f.text_field :title, :class => 'form-control' %>
 				</div>
 				<%= error_span(@query[:title]) %>
 			</div>
 			<div class="control-group">
-				<%= f.label :journal, :class => 'control-label' %>
+				<%= f.label "#{:journal} *", :class => 'control-label' %>
 				<div class="controls">
 					<%= f.text_field :journal, :class => 'form-control' %>
 				</div>
 				<%= error_span(@query[:journal]) %>
 			</div>
 			<div class="control-group">
-				<%= f.label :term, :class => 'control-label' %>
+				<%= f.label "search terms", :class => 'control-label' %>
+				<em>(Use AND to seperate terms ie: horses AND dogs)</em>
 				<div class="controls">
 					<%= f.text_field :term, :class => 'form-control' %>
 				</div>
 				<%= error_span(@query[:term]) %>
 			</div>
 			<div class="control-group">
-				<%= f.label :retmax, :class => 'control-label' %>
+				<%= f.label "Results per page *", :class => 'control-label' %>
 				<div class="controls">
-					<%= f.text_field :retmax, :class => 'form-control' %>
+					<%= f.select :retmax, [['20', 20], ['30', 30], ['50', 50], ['75', 75]], :class => 'form-control' %>
 				</div>
 				<%= error_span(@query[:retmax]) %>
 			</div>
 			<div class="control-group">
-				<%= f.label :mindate, :class => 'control-label' %>
+				<%= f.label "Minimum date *", :class => 'control-label' %>
 				<div class="controls">
-					<%= f.text_field :mindate, :class => 'form-control' %>
+					<%= f.text_field :mindate, :class => 'form-control', :placeholder => 'YYYY/MM/DD or YYYY/MM or YYYY' %>
 				</div>
 				<%= error_span(@query[:mindate]) %>
 			</div>
 			<div class="control-group">
-				<%= f.label :maxdate, :class => 'control-label' %>
+				<%= f.label "Maxmium date *", :class => 'control-label' %>
 				<div class="controls">
-					<%= f.text_field :maxdate, :class => 'form-control' %>
+					<%= f.text_field :maxdate, :class => 'form-control', :placeholder => 'YYYY/MM/DD or YYYY/MM or YYYY' %>
 				</div>
 				<%= error_span(@query[:maxdate]) %>
 			</div>
 
 
-			<%= f.submit nil, :class => 'btn btn-primary' %>
+			<br><%= f.submit nil, :class => 'btn btn-primary' %>
 			<%= link_to 'Cancel', queries_path, :class => 'btn btn-default', :role => "button" %>
 
 			<% end %>

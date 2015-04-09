@@ -7,23 +7,40 @@ class QueriesController < ApplicationController
 
 	# GET /queries/1/run
 	def run
-		urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=#{@query.journal}[journal]"
+		baseurl = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+		urlString = baseurl + "esearch.fcgi?db=pubmed&term=#{@query.journal}[journal]"
 		urlString += " AND #{@query.term}" if @query.term.length > 0
-		urlString += "&retmax=#{@query.retmax}" if @query.retmax > 0
 		urlString += "&datetype=pdat&mindate=#{@query.mindate}"
 		urlString += "&maxdate=#{@query.maxdate}"
 
-		url = URI.escape(urlString)
-		@ids = Nokogiri::HTML(open(url)).xpath("//id")
-		puts url
+		@count = Nokogiri::HTML(open(URI.escape(urlString))).xpath("//count")[0].inner_html.to_i
+		@page = 1
+		@retstart = 0
 
-		urlString = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id="
+		if params[:page]
+			if @page = params[:page].to_i > 0
+				@page = params[:page].to_i
+				@retstart = (@page - 1) * @query.retmax
+				puts @retstart
+			else
+				@page = 1
+			end
+		end
+
+		urlString = baseurl + "esearch.fcgi?db=pubmed&term=#{@query.journal}[journal]"
+		urlString += " AND #{@query.term}" if @query.term.length > 0
+		urlString += "&retstart=#{@retstart}&retmax=#{@query.retmax}" if @query.retmax > 0
+		urlString += "&datetype=pdat&mindate=#{@query.mindate}"
+		urlString += "&maxdate=#{@query.maxdate}"
+		url = URI.escape(urlString)
+		puts url
+		@ids = Nokogiri::HTML(open(url)).xpath("//id")
+
+		urlString = baseurl + "efetch.fcgi?db=pubmed&retmode=xml&id="
 		@ids.each { |id| urlString += "#{id.inner_html}," }
 		url = URI.escape(urlString)
 		puts url
-
 		@summaries = Hash.from_xml(Nokogiri::HTML(open(url)).to_xml)['html']['body']['pubmedarticleset']
-		puts Hash.from_xml(Nokogiri::HTML(open(url)).to_xml)["html"]["body"]
 	end
 
 	# GET /queries
