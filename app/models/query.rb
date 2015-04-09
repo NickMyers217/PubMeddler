@@ -3,4 +3,5 @@ class Query < ActiveRecord::Base
 	validates :retmax, :numericality => { :less_than => 100000 }
 	validates :mindate, :presence => true
 	validates :maxdate, :presence => true
+	belongs_to :user
 end

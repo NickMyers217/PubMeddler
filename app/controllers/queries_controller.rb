@@ -1,7 +1,9 @@
 require 'open-uri'
 
 class QueriesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_query, only: [:show, :edit, :update, :destroy, :run]
+  before_filter :user_is_current_user, only: [:show, :edit, :update, :destroy, :run]
 
   # GET /queries/1/run
   def run
@@ -25,7 +27,7 @@ class QueriesController < ApplicationController
   # GET /queries
   # GET /queries.json
   def index
-    @queries = Query.all
+    @queries = current_user.queries
   end
 
   # GET /queries/1
@@ -46,6 +48,7 @@ class QueriesController < ApplicationController
   # POST /queries.json
   def create
     @query = Query.new(query_params)
+    @query.user_id = current_user.id
 
     respond_to do |format|
       if @query.save
@@ -83,6 +86,13 @@ class QueriesController < ApplicationController
   end
 
   private
+    def user_is_current_user
+      unless current_user.id == @query.user_id
+        flash[:notice] = "You may only interact with your own queries."
+        redirect_to queries_path
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_query
       @query = Query.find(params[:id])
@@ -90,6 +100,6 @@ class QueriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-      params.require(:query).permit(:journal, :term, :retmax, :mindate, :maxdate)
+      params.require(:query).permit(:title, :journal, :term, :retmax, :mindate, :maxdate)
     end
 end

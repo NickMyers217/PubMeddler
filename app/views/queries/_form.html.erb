@@ -19,6 +19,13 @@
 			<% end %>
 
 			<div class="control-group">
+				<%= f.label :title, :class => 'control-label' %>
+				<div class="controls">
+					<%= f.text_field :title, :class => 'form-control' %>
+				</div>
+				<%= error_span(@query[:title]) %>
+			</div>
+			<div class="control-group">
 				<%= f.label :journal, :class => 'control-label' %>
 				<div class="controls">
 					<%= f.text_field :journal, :class => 'form-control' %>

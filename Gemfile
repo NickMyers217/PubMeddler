@@ -1,11 +1,14 @@
 source 'https://rubygems.org'
 
 
+# Devise for user authentication
+gem 'devise'
+
 # Using this gem for the scaffold views exclusively
 # rails g bootstrap:themed [resource_name]
 gem 'twitter-bootstrap-rails'
 
-# Using this to make xml api calls to pubmed, and also to search the xml with xpath
+# Using this to make xml api calls to pubmed
 gem 'nokogiri'
 
 
