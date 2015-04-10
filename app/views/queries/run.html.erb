@@ -1,7 +1,14 @@
 <% if @summaries %>
-<!--<center><h3 class="text text-success"><%# "Page #{@page} - #{@retstart + 1} - #{@retstart + @query.retmax} out of #{@count} results." %></h3></center>-->
 
-<div class="pageBar">
+<div class="pageBar colorShadow">
+	<h4 id="stats" class="text text-success">
+		<%= "#{@retstart + 1} - " %> 
+		<% if @retstart + @query.retmax <= @count %>
+			<%= "#{@retstart + @query.retmax} out of #{@count} results." %>
+		<% else %>
+			<%= "#{@count} out of #{@count} results." %>
+		<% end %>
+	</h4>
 	<ul class="pagination">
 		<%# place left page arrow %>
 		<% if @page > 1 %>
@@ -14,7 +21,7 @@
 
 		<%# list out eleven pages, active page in the very middle %>
 		<% ((@page - 5)..(@page + 5)).each do |i| %>
-			<%if i > 0 and i * @query.retmax - 30 <= @count %>
+			<%if i > 0 and i * @query.retmax - @query.retmax <= @count %>
 				<% if i == @page %>
 				<li class="active"><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
 				<% else %>
@@ -37,8 +44,6 @@
 		<% end %>
 	</ul>
 </div>
-
-
 
 <% @summaries["pubmedarticle"].each do |article| %>
 

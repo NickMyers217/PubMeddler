@@ -14,8 +14,20 @@
  *= require_self
  */
 
+.jumbotron {
+	color: white;
+	background-image: url('/assets/dna.jpg');
+    background-repeat: no-repeat;	
+    background-position: center 25%;
+}
+
 .well {
 	border-radius: 0px;
+}
+
+#stats {
+	padding-top: 10px;
+	margin-bottom: -20px;
 }
 
 .pageBar {
@@ -44,6 +56,6 @@ a#backToTop {
     display: none;
     text-indent: -10000px;
     outline: none!important;
-    background-image: url('http://www.web411solutions.com/images/top-button.png');
+    background-image: url('/assets/top-button.png');
     background-repeat: no-repeat;
 }
