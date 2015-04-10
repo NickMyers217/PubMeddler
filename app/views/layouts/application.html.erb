@@ -11,19 +11,27 @@
 		<%= render 'layouts/header.html.erb' %>
 	</header>
 
-	<div class="container">
-		<p class="notice"><%= notice %></p>
-		<p class="alert"><%= alert %></p>
-	</div>
-
 	<% if params[:controller] == 'landing' and params[:action] == 'index' %>
-		<%= yield %>
+	<%= yield %>
 	<% else %>
-		<div class="container">
-			<%= yield %>
-		</div>
+	<div class="container">
+		<%= yield %>
+	</div>
 	<% end %>
 
-	<a href="#" id="backToTop" class="colorShadow"></a>
+	<% if notice %>
+	<div class="bottomRight flashAlert alert alert-dismissible alert-success">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<p class="notice"><%= notice %></p>
+	</div>
+	<% end %>
+	<% if alert %>
+	<div class="bottomRight flashAlert alert alert-dismissible alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<p class="alert"><%= alert %></p>
+	</div>
+	<% end %>
+
+	<a href="#" id="backToTop" class="bottomRight colorShadow"></a>
 </body>
 </html>

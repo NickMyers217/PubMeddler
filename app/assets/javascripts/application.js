@@ -16,6 +16,10 @@
 //= require_tree .
 
 $(document).ready(function() {
+    $('.flashAlert').each(function() {
+        $(this).fadeIn('slow')
+    });
+
     $(window).scroll(function() {
         if ($(this).scrollTop() > 50) {
             $('#backToTop').fadeIn('slow');

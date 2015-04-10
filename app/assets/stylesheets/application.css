@@ -15,6 +15,7 @@
  */
 
 .jumbotron {
+    margin-top: 50px;
 	color: white;
 	background-image: url('/assets/dna.jpg');
     background-repeat: no-repeat;	
@@ -46,13 +47,23 @@
 	box-shadow:         inset 0px 0px 13px 0px rgba(50, 50, 50, 0.75);
 }
 
+.bottomRight {
+    position: fixed;
+    bottom: 20px;
+    left: 85%;
+}
+
+.flashAlert {
+    width: 10%;
+    opacity: 0.75;
+    display: none;
+    text-align: center;
+}
+
 a#backToTop {
     width: 50px;
     height: 50px;
     opacity: 0.5;
-    position: fixed;
-    bottom: 20px;
-    left: 85%;
     display: none;
     text-indent: -10000px;
     outline: none!important;
