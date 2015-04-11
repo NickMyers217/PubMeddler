@@ -21,6 +21,13 @@
 						<li><a href="/queries/new">New Query</a></li>
 					</ul>
 				</li>
+				<li class="dropdown <%= params[:controller] == 'notes' ? 'active' : '' %>">
+					<a href="/notes" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><%= link_to "Saved Notes", notes_path %></li>
+						<li><a href="/notes/new">New Note</a></li>
+					</ul>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<% if user_signed_in? %>

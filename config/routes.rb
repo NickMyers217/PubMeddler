@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
+  resources :notes
   devise_for :users
-  root 'landing#index'
-
   resources :queries
+  
+  root 'landing#index'
   get '/queries/:id/run' => 'queries#run'
 
   # Example of regular route:

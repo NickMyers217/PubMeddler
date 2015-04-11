@@ -35,6 +35,12 @@
 	text-align: center;
 }
 
+@media screen and (min-width: 768px) {
+    #noteModal .modal-dialog  {
+        width: 75%; 
+    }
+}
+
 .colorShadow {
 	-moz-box-shadow:    0 0 20px #0000aa;
 	-webkit-box-shadow: 0 0 20px #0000aa;

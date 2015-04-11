@@ -41,6 +41,7 @@ class QueriesController < ApplicationController
 		url = URI.escape(urlString)
 		puts url
 		@summaries = Hash.from_xml(Nokogiri::HTML(open(url)).to_xml)['html']['body']['pubmedarticleset']
+		@notes = current_user.notes
 	end
 
 	# GET /queries
@@ -105,20 +106,20 @@ class QueriesController < ApplicationController
 	end
 
 	private
-	def user_is_current_user
-		unless current_user.id == @query.user_id
-			flash[:notice] = "You may only interact with your own queries."
-			redirect_to queries_path
+		def user_is_current_user
+			unless current_user.id == @query.user_id
+				flash[:notice] = "You may only interact with your own queries."
+				redirect_to queries_path
+			end
 		end
-	end
 
-	# Use callbacks to share common setup or constraints between actions.
-	def set_query
-		@query = Query.find(params[:id])
-	end
+		# Use callbacks to share common setup or constraints between actions.
+		def set_query
+			@query = Query.find(params[:id])
+		end
 
-	# Never trust parameters from the scary internet, only allow the white list through.
-	def query_params
-		params.require(:query).permit(:title, :journal, :term, :retmax, :mindate, :maxdate)
-	end
+		# Never trust parameters from the scary internet, only allow the white list through.
+		def query_params
+			params.require(:query).permit(:title, :journal, :term, :retmax, :mindate, :maxdate)
+		end
 end

@@ -1,87 +1,182 @@
 <% if @summaries %>
+	<div class="pageBar colorShadow">
+		<h4 id="stats" class="text text-success">
+			<%= "#{@retstart + 1} - " %> 
+			<% if @retstart + @query.retmax <= @count %>
+				<%= "#{@retstart + @query.retmax} out of #{@count} results." %>
+			<% else %>
+				<%= "#{@count} out of #{@count} results." %>
+			<% end %>
+		</h4>
+		<ul class="pagination">
+			<%# place left page arrow %>
+			<% if @page > 1 %>
+				<li><%= link_to "««", :action => "run", :id => @query.id, :params => { :page => 1 } %></li>
+				<li><%= link_to "«", :action => "run", :id => @query.id, :params => { :page => (@page - 1) } %></li>
+			<% else %>
+				<li class="disabled"><a href="">««</a></li>
+				<li class="disabled"><a href="">«</a></li>
+			<% end %>
 
-<div class="pageBar colorShadow">
-	<h4 id="stats" class="text text-success">
-		<%= "#{@retstart + 1} - " %> 
-		<% if @retstart + @query.retmax <= @count %>
-			<%= "#{@retstart + @query.retmax} out of #{@count} results." %>
-		<% else %>
-			<%= "#{@count} out of #{@count} results." %>
-		<% end %>
-	</h4>
-	<ul class="pagination">
-		<%# place left page arrow %>
-		<% if @page > 1 %>
-		<li><%= link_to "««", :action => "run", :id => @query.id, :params => { :page => 1 } %></li>
-		<li><%= link_to "«", :action => "run", :id => @query.id, :params => { :page => (@page - 1) } %></li>
-		<% else %>
-		<li class="disabled"><a href="">««</a></li>
-		<li class="disabled"><a href="">«</a></li>
-		<% end %>
-
-		<%# list out eleven pages, active page in the very middle %>
-		<% ((@page - 5)..(@page + 5)).each do |i| %>
-			<%if i > 0 and i * @query.retmax - @query.retmax <= @count %>
-				<% if i == @page %>
-				<li class="active"><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
-				<% else %>
-				<li><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
+			<%# list out eleven pages, active page in the very middle %>
+			<% ((@page - 5)..(@page + 5)).each do |i| %>
+				<%if i > 0 and i * @query.retmax - @query.retmax < @count %>
+					<% if i == @page %>
+						<li class="active"><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
+					<% else %>
+						<li><%= link_to i, :action => "run", :id => @query.id, :params => { :page => i } %></li>
+					<% end %>
 				<% end %>
 			<% end %>
-		<% end %>
 
-		<%# place right page arrow %>
-		<% if @retstart + @query.retmax <= @count %>
-		<li><%= link_to "»", :action => "run", :id => @query.id, :params => { :page => (@page + 1) } %></li>
-			<% if @count % @query.retmax == 0 %>
-				<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => (@count / @query.retmax).to_i } %></li>
+			<%# place right page arrow %>
+			<% if @retstart + @query.retmax < @count %>
+				<li><%= link_to "»", :action => "run", :id => @query.id, :params => { :page => (@page + 1) } %></li>
+				<% if @count % @query.retmax == 0 %>
+					<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => (@count / @query.retmax).to_i } %></li>
+				<% else %>
+					<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => ((@count / @query.retmax).to_i + 1) } %></li>
+				<% end %>
 			<% else %>
-				<li><%= link_to "»»", :action => "run", :id => @query.id, :params => { :page => ((@count / @query.retmax).to_i + 1) } %></li>
+				<li class="disabled"><a href="">»</a></li>
+				<li class="disabled"><a href="">»»</a></li>
 			<% end %>
-		<% else %>
-		<li class="disabled"><a href="">»</a></li>
-		<li class="disabled"><a href="">»»</a></li>
-		<% end %>
-	</ul>
-</div>
+		</ul	>
+	</div>
 
-<% @summaries["pubmedarticle"].each do |article| %>
+	<% @summaries["pubmedarticle"].each_with_index do |article, i| %>
+		<div class="row well colorShadow">
+			<!-- Title and Date -->
+			<div class="row">
+				<div class="col-sm-10">
+					<h3>
+						<%= (@page - 1) * @query.retmax + (i + 1) %>).
+						<a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
+							<%= article["medlinecitation"]["article"]["articletitle"] %>
+						</a>
+					</h3>
+				</div>
+				<div class="col-sm-2">
+					<div class="pull-right">
+						<h3 class="text text-success">
+							<% date = article["medlinecitation"]["datecreated"] %>
+							<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
+						</h3>
+					</div>
+				</div>
+			</div>
 
-<div class="row well colorShadow">
-	<div class="row">
-		<div class="col-sm-10">
-			<h3><a href="http://www.ncbi.nlm.nih.gov/pubmed/<%= article["medlinecitation"]["pmid"] %>" target="_blank">
-				<%= article["medlinecitation"]["article"]["articletitle"] %>
-			</a></h3>
+			<hr>
+
+			<!-- Abstract -->
+			<div class="row">
+				<div class="col-sm-12">
+					<% abstract = article["medlinecitation"]["article"]["abstract"] %>
+					<% if abstract %>
+						<% if abstract["abstracttext"].class == String %>
+							<p><%= abstract["abstracttext"].html_safe %></p>
+						<% end %>
+
+						<% if abstract["abstracttext"].class == Array %>
+							<% abstract["abstracttext"].each do |a| %>
+								<p><%= a.html_safe %></p>
+							<% end %>
+						<% end %>
+					<% else %>
+						<h5 class="text text-warning">No Abstract</h5>
+					<% end %>
+				</div>
+			</div>
+
+			<!-- Notes -->
+			<div class="row">
+				<div class="col-sm-12">
+					<% if @notes.count > 0 %>
+						<% found = false %>
+						<% @notes.each do |note| %>
+							<% if note.pmid == article["medlinecitation"]["pmid"] %>
+								<hr>
+								<div class="row">
+									<div id="<%=article["medlinecitation"]["pmid"]%>text" class="col-sm-11">
+										<%= note.text.html_safe %>
+									</div>
+									<div class="col-sm-1">
+										<div class="pull-right">
+											<%= link_to "<span class='glyphicon glyphicon-pencil'></span>".html_safe, edit_note_path(note), :class => 'editBtn btn btn-info btn-xs', :id => article["medlinecitation"]["pmid"], :data => {:toggle => "modal", :target => "#noteModal" } %>
+											<%= link_to "<span class='glyphicon glyphicon-remove'></span>".html_safe, note_path(note), :method => 'delete', :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger btn-xs' %>
+										</div>
+									</div>
+								</div>
+								<% found = true %>
+							<% end %>
+						<% end %>
+						<% if not found %>
+							<hr><h5 class="text text-warning">No Notes</h5>
+						<% end %>
+					<% else %>
+						<hr><h5 class="text text-warning">No Notes</h5>
+					<% end %>
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- Controls -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="pull-right">
+						<div title="Make a note!">
+							<button type="button" id="<%=article["medlinecitation"]["pmid"]%>" class="noteBtn btn btn-primary btn-s" data-toggle="modal" data-target="#noteModal">
+								<span class="glyphicon glyphicon-file"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-sm-2">
-			<h3 class="text text-success">
-				<% date = article["medlinecitation"]["datecreated"] %>
-				<%= "#{date['month']} / #{date['day']} / #{date['year']}" %>
-			</h3>
+	<% end %>
+
+	<!-- Modal for taking notes -->
+	<div class="modal" id="noteModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Make a note!</h4>
+				</div>
+				<%= form_for :note, url: notes_path do |f| %>
+					<div class="modal-body">
+						<%= f.hidden_field :pmid, :id => 'pmidField' %>
+						<%= f.cktext_area :text, :class => 'ckeditor', :ckeditor => { :toolbar => 'mini' } %>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+					<%= f.submit nil, :class => 'btn btn-success' %>
+				</div>
+				<% end %>
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-sm-12">
-			<% abstract = article["medlinecitation"]["article"]["abstract"] %>
-			<% if abstract %>
-			<% if abstract["abstracttext"].class == String %>
-			<p><%= abstract["abstracttext"].html_safe %></p>
-			<% end %>
 
-			<% if abstract["abstracttext"].class == Array %>
-			<% abstract["abstracttext"].each do |a| %>
-			<p><%= a.html_safe %></p>
-			<% end %>
-			<% end %>
-			<% else %>
-			<h5 class="text text-warning">No Abstract</h5>
-			<% end %>
-		</div>
-	</div>
-</div>
+	<script>
+		var CKupdate = function(data) {
+			for(instance in CKEDITOR.instances) {
+				CKEDITOR.instances[instance].updateElement();
+			}
+			CKEDITOR.instances[instance].setData(data);
+		}
 
-<% end %>
+		$(function() {
+			$('.noteBtn').click(function() {
+				$('#pmidField').val($(this).attr('id'));
+				CKupdate('');
+			});
+			$('.editBtn').click(function() {
+				$('#pmidField').val($(this).attr('id'));
+				CKupdate($('#' + $(this).attr('id') + 'text').text());
+			});
+		});
+	</script>
 <% else %>
-<center><h3 class="text text-warning">No results.</h3></center>
+	<center><h3 class="text text-warning">No results.</h3></center>
 <% end %>
